@@ -1,0 +1,38 @@
+DT_REFER,CD_CVM,CD_CONTA,DS_CONTA,VL_CONTA
+2022-06-30,1023,3.01,Receitas de Intermediação Financeira,57469566.0
+2022-06-30,1023,3.01.01,Receita de Juros,57469566.0
+2022-06-30,1023,3.02,Despesas de Intermediação Financeira,-39496720.0
+2022-06-30,1023,3.02.01,Despesa de Juros,-39496720.0
+2022-06-30,1023,3.03,Resultado Bruto de Intermediação Financeira,17972846.0
+2022-06-30,1023,3.04,Outras Despesas e Receitas Operacionais,-6340451.0
+2022-06-30,1023,3.04.01,Despesa de Provisão para Perda Esperada para Risco de Crédito,-1359403.0
+2022-06-30,1023,3.04.02,Receitas de Prestação de Serviços,5951206.0
+2022-06-30,1023,3.04.03,Despesas com Pessoal,-6343621.0
+2022-06-30,1023,3.04.04,Outras Despesas de Administrativas,-2025277.0
+2022-06-30,1023,3.04.05,Despesas Tributárias,-1610363.0
+2022-06-30,1023,3.04.06,Outras Receitas Operacionais,2285649.0
+2022-06-30,1023,3.04.06.01,Ganhos líquidos sobre instrumentos financeiros,581605.0
+2022-06-30,1023,3.04.06.02,Resultado líquido em operações de câmbio e em conversão de transações em moedas estrangeiras,-1030983.0
+2022-06-30,1023,3.04.06.03,Outras,2735027.0
+2022-06-30,1023,3.04.07,Outras Despesas Operacionais,-4631044.0
+2022-06-30,1023,3.04.07.01,Amortização de ativos intangíveis,-286480.0
+2022-06-30,1023,3.04.07.02,"Provisões trabalhistas, fiscais e cíveis",-1751591.0
+2022-06-30,1023,3.04.07.03,Depreciação,-648282.0
+2022-06-30,1023,3.04.07.04,Outras,-1944691.0
+2022-06-30,1023,3.04.08,Resultado da Equivalência Patrimonial,1392402.0
+2022-06-30,1023,3.05,Resultado antes dos Tributos sobre o Lucro,11632395.0
+2022-06-30,1023,3.06,Imposto de Renda e Contribuição Social sobre o Lucro,-2911219.0
+2022-06-30,1023,3.06.01,Corrente,-2481324.0
+2022-06-30,1023,3.06.02,Diferido,-429895.0
+2022-06-30,1023,3.07,Lucro ou Prejuízo das Operações Continuadas,8721176.0
+2022-06-30,1023,3.08,Resultado Líquido das Operações Descontinuadas,0.0
+2022-06-30,1023,3.09,Lucro ou Prejuízo antes das Participações e Contribuições Estatutárias,8721176.0
+2022-06-30,1023,3.10,Participações nos Lucros e Contribuições Estatutárias,0.0
+2022-06-30,1023,3.11,Lucro ou Prejuízo Líquido Consolidado do Período,8721176.0
+2022-06-30,1023,3.11.01,Atribuído aos Sócios da Empresa Controladora,8202219.0
+2022-06-30,1023,3.11.02,Atribuído aos Sócios não Controladores,518957.0
+2022-06-30,1023,3.99,Lucro por Ação (R$/Ação),0.0
+2022-06-30,1023,3.99.01,Lucro Básico por Ação,0.0
+2022-06-30,1023,3.99.01.01,ON,2.87
+2022-06-30,1023,3.99.02,Lucro Diluído por Ação,0.0
+2022-06-30,1023,3.99.02.01,ON,2.87

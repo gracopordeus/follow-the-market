@@ -3,7 +3,7 @@ LANDING = "/media/glauco/HDD1/followTheMarket/landing"
 RAW = "/media/glauco/HDD1/followTheMarket/raw"
 TRUSTED = "/media/glauco/HDD1/followTheMarket/trusted"
 REFINED = "/media/glauco/HDD1/followTheMarket/refined"
-OUTPUTS_DIR = "/home/glauco/follow-the-market/outputs"
+OUTPUTS_DIR = "/home/glauco/follow-the-market/outputs/output.csv"
 
 # CVM FILES
 CVM_CIAS = "https://dados.cvm.gov.br/dados/CIA_ABERTA/DOC/"

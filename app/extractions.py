@@ -10,7 +10,7 @@ import os
 
 
 # Check url of the file requested
-def cvmUrlCheck(file):
+def url_check(file):
     file = str.lower(file)
     url = ''
     if file == 'ipe':
@@ -30,7 +30,7 @@ def cvmUrlCheck(file):
     return url
 
 
-def dataLakePath(zone, table):
+def data_lake_path(zone, table):
     if zone == 'raw':
         zone_path = source.RAW+'/'+table
     elif zone == 'trusted':
@@ -41,11 +41,12 @@ def dataLakePath(zone, table):
         print("Failed to define the file zone")
     return zone_path
 
+
 # Send a GET request to the URL
-def cvmFiles(file):
+def cvm_files(file):
     file = str.lower(file)
     
-    url = cvmUrlCheck(file)
+    url = url_check(file)
     
     response = requests.get(url)
 
@@ -70,10 +71,10 @@ def cvmFiles(file):
 
 
 # Download the most recent file
-def cvmDownloadMostRecent(file):
+def download_most_recent(file):
     file = str.lower(file)
-    files_list = cvmFiles(file)
-    url = cvmUrlCheck(file)
+    files_list = cvm_files(file)
+    url = url_check(file)
     url = url+files_list[-1]
     
     response = requests.get(url)
@@ -94,10 +95,10 @@ def cvmDownloadMostRecent(file):
 
 
 # Download all files
-def cvmDownloadFiles(file, year='all'):
+def download_files(file, year='all'):
     file = str.lower(file)
-    files_list = cvmFiles(file)
-    url = cvmUrlCheck(file)
+    files_list = cvm_files(file)
+    url = url_check(file)
     
     files = []
     if year == 'all':
@@ -127,7 +128,7 @@ def cvmDownloadFiles(file, year='all'):
         
         
 # import most recent file to polars
-def cvmReadFromLanding(file, document, year='all'):
+def read_files_from_landing(file, document='', year='all'):
     file = str.lower(file)
     document = str.upper(document)
     year = str(year)
@@ -168,35 +169,55 @@ def cvmReadFromLanding(file, document, year='all'):
     return result_df
 
 
-def cvmWriteFiles(df, zone, table):
+def write_files_to_lake(df, zone, table):
     zone = str.lower(zone)
     table = str.lower(table)
-    zone_path = dataLakePath(zone, table)
+    zone_path = data_lake_path(zone, table)
     
     if not os.path.exists(zone_path):
         os.makedirs(zone_path)
             
-    if zone == 'raw':
-        df = df.with_columns([
-            (pl.col('DT_REFER').dt.year()).alias('YEAR'),
-            (pl.col('DT_REFER').dt.month()).alias('MONTH'),
-            (pl.col('DT_REFER').dt.day()).alias('DAY')
-        ])
+    df = (
+        df
+        .with_columns(YEAR = pl.col('DT_REFER').dt.year())
+        .unique()
+    )
     
     ds.write_dataset(
         df.to_arrow(),
         zone_path,
         format='parquet',
-        partitioning=['YEAR', 'MONTH', 'DAY']
+        partitioning=['YEAR']
     )
     
     
-def cvmReadFiles(zone, table):
+def read_files_from_lake(zone, table):
     zone = str.lower(zone)
     table = str.lower(table)
-    zone_path = dataLakePath(zone, table)
+    zone_path = data_lake_path(zone, table)
     
     table = ds.dataset(zone_path, format='parquet').to_table()
     polars_df = pl.DataFrame(table)
     
     return polars_df
+
+def trasnform_trusted_dre(table):
+    final_table = (
+        table
+        .with_columns(
+            rn_quarter = (pl.col('DT_INI_EXERC'))
+            .rank('ordinal',descending=True)
+            .over(['CNPJ_CIA', 'DT_REFER', 'CD_CONTA'])
+            )
+        .filter(pl.col('rn_quarter')==1)
+        .filter(pl.col('ORDEM_EXERC')=='ÚLTIMO')
+        .sort(pl.col('CD_CONTA'))
+        .select(
+            pl.col('DT_REFER'),
+            pl.col('CD_CVM'),
+            pl.col('CD_CONTA'),
+            pl.col('DS_CONTA'),
+            pl.col('VL_CONTA')
+        )
+    )
+    return final_table
