@@ -55,15 +55,15 @@ def cvm_files(file):
         # Parse the HTML content
         soup = BeautifulSoup(response.content, "html.parser")
 
-        # Find all links in the HTML (assuming they represent files)
-        links = soup.find_all("a")
-        
-        # Extract and print the href attribute of each link
-        result_list = []
-        for link in links:
-            href = link.get("href")
-            if href and file in href:
-                result_list.append(href)
+    # Find all links in the HTML (assuming they represent files)
+    links = soup.find_all("a")
+    
+    # Extract and print the href attribute of each link
+    result_list = []
+    for link in links:
+        href = link.get("href")
+        if href and file in href:
+            result_list.append(href)
     else:
         print(f"Failed to fetch the page. Status code: {response.status_code}")
     
@@ -150,16 +150,17 @@ def read_files_from_landing(file, document='', year='all'):
             csv_filename = zip_file.namelist()
 
         if file in ['dfp', 'itr']: 
-            file_name = [f for f in csv_filename if document in f and '_con_' in f]
+            file_name = [f for f in csv_filename if document in str.upper(f) and '_con_' in f]
         else:
-            file_name = [f for f in csv_filename]
+            file_name = [f for f in csv_filename if document in str.upper(f)]
         
         polars_df = pl.read_csv(
             ZipFile(path).read(file_name[0]),
             truncate_ragged_lines=True,
             encoding='ISO-8859-1',
             separator=';',
-            try_parse_dates=True
+            try_parse_dates=True,
+            ignore_errors=True
         )
         
         list_polars_df.append(polars_df)
@@ -177,17 +178,12 @@ def write_files_to_lake(df, zone, table):
     if not os.path.exists(zone_path):
         os.makedirs(zone_path)
             
-    df = (
-        df
-        .with_columns(YEAR = pl.col('DT_REFER').dt.year())
-        .unique()
-    )
+    df = df.unique()
     
     ds.write_dataset(
         df.to_arrow(),
         zone_path,
-        format='parquet',
-        partitioning=['YEAR']
+        format='parquet'
     )
     
     
@@ -201,17 +197,34 @@ def read_files_from_lake(zone, table):
     
     return polars_df
 
-def trasnform_trusted_dre(table):
+
+def trasnform_trusted_accounts(table):
+    
+    if 'DT_INI_EXERC' in table.schema:
+        table = (
+            table
+            .with_columns(
+                RN_QUARTER = (pl.col('DT_INI_EXERC'))
+                .rank('ordinal',descending=True)
+                .over(['CNPJ_CIA', 'DT_REFER', 'CD_CONTA'])
+                )
+            .filter(pl.col('RN_QUARTER')==1)
+            )
+    
     final_table = (
         table
         .with_columns(
-            rn_quarter = (pl.col('DT_INI_EXERC'))
+            VER = (pl.col('VERSAO'))
             .rank('ordinal',descending=True)
             .over(['CNPJ_CIA', 'DT_REFER', 'CD_CONTA'])
-            )
-        .filter(pl.col('rn_quarter')==1)
+        )
+        .filter(pl.col('VER')==1)
+        .with_columns(
+            VL_CONTA = pl.when(pl.col('ESCALA_MOEDA') == 'MIL')
+            .then(pl.col('VL_CONTA') * 1000)
+            .otherwise(pl.col('VL_CONTA'))
+        )
         .filter(pl.col('ORDEM_EXERC')=='ÚLTIMO')
-        .sort(pl.col('CD_CONTA'))
         .select(
             pl.col('DT_REFER'),
             pl.col('CD_CVM'),
@@ -219,5 +232,38 @@ def trasnform_trusted_dre(table):
             pl.col('DS_CONTA'),
             pl.col('VL_CONTA')
         )
+    )
+    return final_table
+
+
+def trasnform_trusted_tickers(table):
+
+    final_table = (
+        table
+        .filter(
+            pl.col('Valor_Mobiliario').str.contains('Ações') |
+            pl.col('Valor_Mobiliario').str.contains('Acoes') |
+            pl.col('Valor_Mobiliario').str.contains('ações') |
+            pl.col('Valor_Mobiliario').str.contains('acoes') |
+            (pl.col('Valor_Mobiliario') == 'Unit')
+            )
+        .filter(pl.col('Mercado')=='Bolsa')
+        .with_columns(
+            LAST_REPORT = (pl.col('Data_Referencia'))
+            .rank('ordinal',descending=True)
+            .over(['CNPJ_Companhia', 'Valor_Mobiliario'])
+        )
+        .filter(pl.col('LAST_REPORT')==1)
+        .filter(pl.col('Data_Fim_Negociacao').is_null())
+        .filter(pl.col('Data_Fim_Listagem').is_null())
+        .filter(pl.col('Codigo_Negociacao').is_not_null())
+        .filter(pl.col('Codigo_Negociacao').str.len_chars().is_between(5,6))
+        .select(
+            pl.col('CNPJ_Companhia').alias('CNPJ'),
+            pl.col('Data_Referencia').alias('DT_REFER'),
+            pl.col('Segmento').alias('SEGMENTO'),
+            pl.col('Codigo_Negociacao').alias('STOCK')
+        )
+        .unique()
     )
     return final_table

@@ -1,3 +1,4 @@
+PRICES_API = "20F0M3CK2D5PW49C"
 
 LANDING = "/media/glauco/HDD1/followTheMarket/landing"
 RAW = "/media/glauco/HDD1/followTheMarket/raw"
