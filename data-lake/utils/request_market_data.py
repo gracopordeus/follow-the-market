@@ -4,8 +4,9 @@ import polars as pl
 import requests
 import json
 import os
+from tqdm import tqdm
 
-import source
+import utils.source as source
 
 
 def request_prices_to_landing(ticker):
@@ -30,7 +31,7 @@ def request_prices_to_landing(ticker):
     data = response.json()
 
     # Specify the JSON file path
-    json_file_path = source.LANDING+'/stock_price_'+str.lower(ticker)+'.json'
+    json_file_path = source.LANDING+'/prices/stock_price_'+str.lower(ticker)+'.json'
 
     # Write the data to the JSON file
     with open(json_file_path, 'w') as json_file:
@@ -42,7 +43,7 @@ def request_prices_to_landing(ticker):
 def write_prices_to_raw(ticker):
     file = str.lower('ticker')
     zone_path = source.RAW+'/prices/'+ticker
-    json_file_path = source.LANDING+'/stock_price_'+str.lower(ticker)+'.json'
+    json_file_path = source.LANDING+'/prices/stock_price_'+str.lower(ticker)+'.json'
 
     with open(json_file_path, 'r') as file:
         data = json.load(file)
@@ -96,10 +97,32 @@ def write_prices_to_raw(ticker):
     
 def read_prices_from_lake(zone, ticker):
     zone = str.lower(zone)
-    ticker = str.lower(ticker)
+    ticker = str.upper(ticker)
     zone_path = source.RAW+'/prices/'+ticker
     
     table = ds.dataset(zone_path, format='parquet').to_table()
     polars_df = pl.DataFrame(table)
+    
+    return polars_df
+
+def trasnform_trusted_prices(ticker_list):
+    
+    list_df = []
+    
+    for ticker in tqdm(ticker_list):
+        ticker = str.upper(ticker)
+        
+        try:
+            prices = (
+            read_prices_from_lake('raw', ticker)
+            .with_columns(STOCK = pl.lit(ticker))
+            .filter(pl.col('date').dt.year() >= 2010)
+            )
+            
+            list_df.append(prices)
+        except Exception as e:
+            continue
+        
+    polars_df = pl.concat(list_df)
     
     return polars_df

@@ -1,4 +1,4 @@
-import source
+import utils.source as source
 
 import polars as pl
 import pyarrow
@@ -227,6 +227,7 @@ def trasnform_trusted_accounts(table):
         .filter(pl.col('ORDEM_EXERC')=='ÚLTIMO')
         .select(
             pl.col('DT_REFER'),
+            pl.col('CNPJ_CIA').alias('CNPJ'),
             pl.col('CD_CVM'),
             pl.col('CD_CONTA'),
             pl.col('DS_CONTA'),
@@ -267,3 +268,39 @@ def trasnform_trusted_tickers(table):
         .unique()
     )
     return final_table
+
+
+def transform_active_companies():
+    
+    bpa = read_files_from_lake(zone='trusted', table='itr/bpa')
+    
+    stocks = read_files_from_lake(zone='trusted', table='fca/valor_mobiliario')
+    
+    active_companies = (
+        bpa
+        .select(
+            pl.col('CNPJ'),
+            pl.col('CD_CVM')
+        )
+        .unique()
+        .join(
+            stocks,
+            on = ['CNPJ'],
+            how = 'inner'
+        )
+    )
+    return active_companies
+
+
+def trasnform_refined_accounts(document):
+    
+    active_companies = read_files_from_lake(zone='refined', table='active_companies')
+    
+    demonstration = read_files_from_lake(zone='raw', table=document)
+    
+    list_df = [demonstration.filter(pl.col('CNPJ_CIA')==cnpj) for cnpj in tqdm(active_companies['CNPJ'])]
+    
+    polars_df = pl.concat(list_df)
+    
+    return polars_df   
+    
