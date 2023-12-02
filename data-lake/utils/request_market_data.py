@@ -36,8 +36,6 @@ def request_prices_to_landing(ticker):
     # Write the data to the JSON file
     with open(json_file_path, 'w') as json_file:
         json.dump(data, json_file, indent=4)
-
-    print(f"Downloaded file: {json_file_path}")
    
 
 def write_prices_to_raw(ticker):
@@ -91,8 +89,6 @@ def write_prices_to_raw(ticker):
         format='parquet',
         existing_data_behavior='overwrite_or_ignore'
     )
-    
-    print(f"Data saved to: {zone_path}")
     
     
 def read_prices_from_lake(zone, ticker):

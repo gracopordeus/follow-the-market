@@ -9,9 +9,10 @@ from utils.request_cvm_ciasabertas import (
     trasnform_refined_accounts
 )
 
-DOCUMENTS = ['itr', 'fca']
+DOCUMENTS = ['itr', 'fca', 'fre']
 ITR_REPORTS = ['bpa', 'bpp', 'dre']
 FCA_REPORTS = ['valor_mobiliario']
+FRE_REPORTS = ['capital_social']
 
 # Downloading to Landing
 for DOCUMENT in DOCUMENTS:
@@ -24,6 +25,8 @@ for DOCUMENT in DOCUMENTS:
         REPORTS = ITR_REPORTS
     elif DOCUMENT == 'fca':
         REPORTS = FCA_REPORTS
+    elif DOCUMENT == 'fre':
+        REPORTS = FRE_REPORTS
         
     for REPORT in REPORTS:
         
@@ -50,10 +53,10 @@ write_files_to_lake(df, 'refined', 'active_companies')
 for REPORT in ITR_REPORTS:
     table = 'itr/'+REPORT
     
-    refined_accounts = trasnform_refined_accounts('itr/bpa')
+    refined_accounts = trasnform_refined_accounts(table)
     
     write_files_to_lake(
         df = refined_accounts,
         zone = 'refined',
-        table = REPORT
+        table = table
     )

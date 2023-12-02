@@ -1,0 +1,44 @@
+DT_REFER,CNPJ,CD_CVM,CD_CONTA,DS_CONTA,VL_CONTA
+2023-06-30,33.000.167/0001-01,9512,3.01,Receita de Venda de Bens e/ou Serviços,113840000000.0
+2023-06-30,33.000.167/0001-01,9512,3.02,Custo dos Bens e/ou Serviços Vendidos,-56159000000.0
+2023-06-30,33.000.167/0001-01,9512,3.03,Resultado Bruto,57681000000.0
+2023-06-30,33.000.167/0001-01,9512,3.04,Despesas/Receitas Operacionais,-15710000000.0
+2023-06-30,33.000.167/0001-01,9512,3.04.01,Despesas com Vendas,-5947000000.0
+2023-06-30,33.000.167/0001-01,9512,3.04.02,Despesas Gerais e Administrativas,-1921000000.0
+2023-06-30,33.000.167/0001-01,9512,3.04.03,Perdas pela Não Recuperabilidade de Ativos,0.0
+2023-06-30,33.000.167/0001-01,9512,3.04.04,Outras Receitas Operacionais,0.0
+2023-06-30,33.000.167/0001-01,9512,3.04.05,Outras Despesas Operacionais,-7736000000.0
+2023-06-30,33.000.167/0001-01,9512,3.04.05.01,Tributárias,-1632000000.0
+2023-06-30,33.000.167/0001-01,9512,3.04.05.02,Custos com pesquisa e desenvolvimento tecnológico,-850000000.0
+2023-06-30,33.000.167/0001-01,9512,3.04.05.03,Custos exploratórios para extração de petróleo e gás,-945000000.0
+2023-06-30,33.000.167/0001-01,9512,3.04.05.04,Participação nos Lucros ou Resultados,0.0
+2023-06-30,33.000.167/0001-01,9512,3.04.05.05,Outras receitas (despesas) operacionais líquidas,-2363000000.0
+2023-06-30,33.000.167/0001-01,9512,3.04.05.06,Baixa de gastos adicionais capitalizados indevidamente,0.0
+2023-06-30,33.000.167/0001-01,9512,3.04.05.07,Reversão (Perda) no valor de recuperação de ativos - Impairment,-1946000000.0
+2023-06-30,33.000.167/0001-01,9512,3.04.06,Resultado de Equivalência Patrimonial,-106000000.0
+2023-06-30,33.000.167/0001-01,9512,3.05,Resultado Antes do Resultado Financeiro e dos Tributos,41971000000.0
+2023-06-30,33.000.167/0001-01,9512,3.06,Resultado Financeiro,-269000000.0
+2023-06-30,33.000.167/0001-01,9512,3.06.01,Receitas Financeiras,2553000000.0
+2023-06-30,33.000.167/0001-01,9512,3.06.01.01,Receitas financeiras,2553000000.0
+2023-06-30,33.000.167/0001-01,9512,3.06.01.02,Variações Monetárias e Cambiais Líquidas,0.0
+2023-06-30,33.000.167/0001-01,9512,3.06.02,Despesas Financeiras,-2822000000.0
+2023-06-30,33.000.167/0001-01,9512,3.06.02.01,Despesas financeiras,-4295000000.0
+2023-06-30,33.000.167/0001-01,9512,3.06.02.02,"Variações monetárias e cambiais, líquidas",1473000000.0
+2023-06-30,33.000.167/0001-01,9512,3.07,Resultado Antes dos Tributos sobre o Lucro,41702000000.0
+2023-06-30,33.000.167/0001-01,9512,3.08,Imposto de Renda e Contribuição Social sobre o Lucro,-12766000000.0
+2023-06-30,33.000.167/0001-01,9512,3.08.01,Corrente,-8763000000.0
+2023-06-30,33.000.167/0001-01,9512,3.08.02,Diferido,-4003000000.0
+2023-06-30,33.000.167/0001-01,9512,3.09,Resultado Líquido das Operações Continuadas,28936000000.0
+2023-06-30,33.000.167/0001-01,9512,3.10,Resultado Líquido de Operações Descontinuadas,0.0
+2023-06-30,33.000.167/0001-01,9512,3.10.01,Lucro/Prejuízo Líquido das Operações Descontinuadas,0.0
+2023-06-30,33.000.167/0001-01,9512,3.10.02,Ganhos/Perdas Líquidas sobre Ativos de Operações Descontinuadas,0.0
+2023-06-30,33.000.167/0001-01,9512,3.11,Lucro/Prejuízo Consolidado do Período,28936000000.0
+2023-06-30,33.000.167/0001-01,9512,3.11.01,Atribuído a Sócios da Empresa Controladora,28782000000.0
+2023-06-30,33.000.167/0001-01,9512,3.11.02,Atribuído a Sócios Não Controladores,154000000.0
+2023-06-30,33.000.167/0001-01,9512,3.99,Lucro por Ação - (Reais / Ação),0.0
+2023-06-30,33.000.167/0001-01,9512,3.99.01,Lucro Básico por Ação,0.0
+2023-06-30,33.000.167/0001-01,9512,3.99.01.01,ON,2200.0
+2023-06-30,33.000.167/0001-01,9512,3.99.01.02,PN,2200.0
+2023-06-30,33.000.167/0001-01,9512,3.99.02,Lucro Diluído por Ação,0.0
+2023-06-30,33.000.167/0001-01,9512,3.99.02.01,ON,2200.0
+2023-06-30,33.000.167/0001-01,9512,3.99.02.02,PN,2200.0

@@ -4,6 +4,7 @@ import polars as pl
 import pyarrow
 import pyarrow.dataset as ds
 import requests
+from tqdm import tqdm
 from bs4 import BeautifulSoup
 from zipfile import ZipFile
 import os
@@ -163,6 +164,9 @@ def read_files_from_landing(file, document='', year='all'):
             ignore_errors=True
         )
         
+        if document == 'CAPITAL_SOCIAL':
+            polars_df = polars_df.drop('Prazo_Integralizacao')
+        
         list_polars_df.append(polars_df)
     
     result_df = pl.concat(list_polars_df)
@@ -224,7 +228,6 @@ def trasnform_trusted_accounts(table):
             .then(pl.col('VL_CONTA') * 1000)
             .otherwise(pl.col('VL_CONTA'))
         )
-        .filter(pl.col('ORDEM_EXERC')=='ÚLTIMO')
         .select(
             pl.col('DT_REFER'),
             pl.col('CNPJ_CIA').alias('CNPJ'),
@@ -270,6 +273,34 @@ def trasnform_trusted_tickers(table):
     return final_table
 
 
+def transform_trusted_stocks(table):
+    
+    final_table = (
+        table
+        .filter(
+            pl.col('Tipo_Capital')=='Capital Integralizado'
+        )
+        .with_columns_seq(
+            QUARTER = pl.col('Data_Referencia').dt.quarter(),
+            YEAR = pl.col('Data_Referencia').dt.year()
+        )
+        .with_columns(
+            LAST_REPORT = (pl.col('Data_Referencia'))
+            .rank('ordinal',descending=True)
+            .over(['CNPJ_Companhia', 'QUARTER', 'YEAR'])
+        )
+        .filter(pl.col('LAST_REPORT')==1)        
+        .select(
+            pl.col('CNPJ_Companhia').alias('CNPJ'),
+            pl.col('Data_Referencia').alias('DT_REFER'),
+            pl.col('Quantidade_Acoes_Ordinarias').alias('ON_STOCKS'),
+            pl.col('Quantidade_Acoes_Preferenciais').alias('PN_STOCKS'),
+            pl.col('Quantidade_Total_Acoes').alias('TOTAL_STOCKS')
+        )
+    )
+    return final_table
+
+
 def transform_active_companies():
     
     bpa = read_files_from_lake(zone='trusted', table='itr/bpa')
@@ -296,11 +327,14 @@ def trasnform_refined_accounts(document):
     
     active_companies = read_files_from_lake(zone='refined', table='active_companies')
     
-    demonstration = read_files_from_lake(zone='raw', table=document)
+    demonstration = read_files_from_lake(zone='trusted', table=document)
     
-    list_df = [demonstration.filter(pl.col('CNPJ_CIA')==cnpj) for cnpj in tqdm(active_companies['CNPJ'])]
+    list_df = []
+    
+    for cnpj in tqdm(active_companies['CNPJ']):
+        list_df.append(demonstration.filter(pl.col('CNPJ')==cnpj))
     
     polars_df = pl.concat(list_df)
     
-    return polars_df   
+    return polars_df  
     
